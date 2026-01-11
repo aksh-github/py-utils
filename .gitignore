@@ -44,3 +44,6 @@ ENV/
 *.log
 
 *.pdf
+
+src/video/out/*
+src/video/in/*
