@@ -13,3 +13,8 @@ COPY src/telegram /app/src/telegram
 
 # Set the command to run when the container starts
 CMD ["python", "src/telegram/send-msg.py"]
+
+# Use it like:
+# docker build -t stock-report .
+# and then
+# docker run --env-file .env stock-report

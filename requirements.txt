@@ -8,3 +8,4 @@
 telethon
 schedule
 pytz
+python-dotenv
