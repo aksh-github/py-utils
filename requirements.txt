@@ -4,3 +4,5 @@ PyPDF2
 opencv-python
 moviepy
 telethon
+schedule
+pytz
