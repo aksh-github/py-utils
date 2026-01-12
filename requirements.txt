@@ -5,6 +5,7 @@
 # moviepy
 
 # For telegram
+yfinance
 telethon
 schedule
 pytz
