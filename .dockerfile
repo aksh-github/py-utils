@@ -1,0 +1,15 @@
+# Use an official Python image as a base
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file and install dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy the source code of your application
+COPY src/telegram /app/src/telegram
+
+# Set the command to run when the container starts
+CMD ["python", "src/telegram/send-msg.py"]

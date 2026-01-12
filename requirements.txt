@@ -1,8 +1,10 @@
-PyPDF2
+# PyPDF2
 
-# for video processing
-opencv-python
-moviepy
+# # for video processing
+# opencv-python
+# moviepy
+
+# For telegram
 telethon
 schedule
 pytz
