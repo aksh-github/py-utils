@@ -7,21 +7,7 @@ from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
 from datetime import datetime
 import pytz
-
-# Read stocks file
-def read_stocks():
-    with open('stocks.txt', 'r') as f:
-        stocks = []
-
-        for line in f:
-            line = line.strip()
-            if line == '':
-                break
-            stocks.append(line)
-            
-    print(stocks)
-
-
+from stock_perfom import process
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -49,23 +35,33 @@ def send_message():
         logging.error("Missing required environment variables")
         exit(1)
 
+    # print(get_stock_performance("muthootfin.NS"))
+    # print(process())    
+    message = process()
+    # print(message)
+
     try:
         with TelegramClient(StringSession(), env['api_id'], env['api_hash']).start(bot_token=env['bot_token']) as client:
+
             logging.info("Sending message...")
             # Message
-            message = 'Good Afternoon! 😊'
+            now = datetime.now()
+            client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y"))
             client.send_message(int(env['group_id']), message)
+
             logging.info("Message sent successfully!")
+
+
     except Exception as e:
         logging.error(f"Error: {e}")
-
-# Schedule job
-tz = pytz.timezone('Asia/Kolkata')
-schedule.every().day.at("16:00").do(send_message)
 
 if __name__ == '__main__':
     logging.info("Scheduler started")
     send_message()
+
+    # Schedule job
+    # tz = pytz.timezone('Asia/Kolkata')
+    # schedule.every().day.at("16:00").do(send_message)
     # while True:
     #     schedule.run_pending()
     #     time.sleep(1)
