@@ -9,10 +9,10 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy the source code of your application
-COPY src/telegram /app/src/telegram
+COPY src/telegram /app/src
 
 # Set the command to run when the container starts
-CMD ["python", "src/telegram/send-msg.py"]
+CMD ["python", "src/send-msg.py"]
 
 # Use it like:
 # docker build -t stock-report .

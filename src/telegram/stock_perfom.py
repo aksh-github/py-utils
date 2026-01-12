@@ -43,7 +43,7 @@ def get_stock_performance(ticker, period=def_time):
     # print(f"Change: {change:.2f} ({perc_change:.2f}%)")
     logging.info(f"Got data for {ticker}")
 
-    return(f"{ticker}: ({open_price:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)")
+    return(f"**{ticker}** : \n\r({open_price:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)")
     
 
 def process(period=def_time):
@@ -52,6 +52,6 @@ def process(period=def_time):
 
     resp = ""
     for s in stocks:
-        resp = resp + get_stock_performance(s, period=period) + "\n\r"
+        resp = resp + get_stock_performance(s, period=period) + "\n\r" + "\n\r"
 
     return resp

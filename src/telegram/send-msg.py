@@ -22,8 +22,29 @@ def get_environment_variables():
         'group_id': os.getenv('GROUP_ID')
     }
 
+# this is dummy func
+def dummy_send_message():
+    # Load secrets from .env
+    load_dotenv()
+
+    env = get_environment_variables()
+
+    if not all([env['api_id'], env['api_hash'], env['bot_token'], env['group_id']]):
+        logging.error("Missing required environment variables")
+        exit(1)
+
+    with TelegramClient(StringSession(), env['api_id'], env['api_hash']).start(bot_token=env['bot_token']) as client:
+
+        logging.info("Sending message...")
+        # Message
+        now = datetime.now()
+        client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y"))
+        client.send_message(int(env['group_id']), "**this text will be bold** is it bold?", parse_mode="md")
+
+        logging.info("Message sent successfully!")
 
 
+# this is actual func
 def send_message():
 
     # Load secrets from .env
@@ -47,11 +68,9 @@ def send_message():
             # Message
             now = datetime.now()
             client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y"))
-            client.send_message(int(env['group_id']), message)
+            client.send_message(int(env['group_id']), message, parse_mode="md")
 
             logging.info("Message sent successfully!")
-
-
     except Exception as e:
         logging.error(f"Error: {e}")
 
