@@ -46,9 +46,8 @@ def get_stock_performance(ticker, period=def_time):
     return(f"**{ticker}** : \n\r({open_price:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)")
     
 
-def process(period=def_time):
+def process(period):
     stocks = read_stocks()
-
 
     resp = ""
     for s in stocks:

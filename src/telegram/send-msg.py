@@ -57,8 +57,10 @@ def send_message():
         exit(1)
 
     # print(get_stock_performance("muthootfin.NS"))
-    # print(process())    
-    message = process()
+    # print(process())
+
+    timeperiod = '15d'    
+    message = process(timeperiod)
     # print(message)
 
     try:
@@ -67,7 +69,7 @@ def send_message():
             logging.info("Sending message...")
             # Message
             now = datetime.now()
-            client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y"))
+            client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
             client.send_message(int(env['group_id']), message, parse_mode="md")
 
             logging.info("Message sent successfully!")
