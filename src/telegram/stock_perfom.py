@@ -27,23 +27,32 @@ def get_stock_performance(ticker, period=def_time):
     if data.empty:
         logging.info(f"No data found for {ticker}")
         return (f"No data found for {ticker}")
-            
-    current_price = data['Close'].iloc[-1]
+                
+    current_price = data['Close'].iloc[-1]  # today's price
+    yest_price = data['Close'].iloc[-2]     # yest's price
 
-    open_price =  data['Close'].iloc[0]
+    oldest_price =  data['Close'].iloc[0]     # price before 7 / 15 d etc.
 
 
-    # open_price = data['Open'].iloc[0] if data.shape[0] > 1 else data['Open'].iloc[-1]
-    change = (current_price - open_price)
-    perc_change = change / open_price * 100
+    # calc for 15d to today    
+    change = (current_price - oldest_price)
+    perc_change = change / oldest_price * 100
+
+
+    lastchange = (current_price - yest_price)
+    last_perc_change = lastchange / yest_price * 100
     
     # print(f"Stock: {ticker}")
     # print(f"Current Price: ₹{current_price:.2f}")
-    # print(f"Open Price: ₹{open_price:.2f}")
+    # print(f"Open Price: ₹{oldest_price:.2f}")
     # print(f"Change: {change:.2f} ({perc_change:.2f}%)")
     logging.info(f"Got data for {ticker}")
 
-    return(f"**{ticker}** : \n\r({open_price:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)")
+    # return(f"**{ticker}** : \n\r({oldest_price:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)")
+
+    return f"""**{ticker}** : 
+    ({oldest_price:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)
+    (Since yest: {yest_price:.2f} to {current_price:.2f}) {lastchange:.2f} ({last_perc_change:.2f}%)"""
     
 
 def process(period):
