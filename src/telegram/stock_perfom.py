@@ -44,7 +44,7 @@ def get_stock_performance(stockObj, period=def_time):
 
 
     # calc for buy price to today    
-    change = (current_price - buy_price)
+    change = (current_price - buy_price) * qty
     perc_change = change / buy_price * 100
 
 
@@ -62,9 +62,9 @@ def get_stock_performance(stockObj, period=def_time):
     # ({lastXdayPrice:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)
     # (Since yest: {yest_price:.2f} to {current_price:.2f}) {recent_chng:.2f} ({recent_perc_chng:.2f}%)"""
 
-    return f"""**{ticker}: {buy_price} , Qty: {qty}** : 
-    (Total Change: {buy_price:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)
-    (Since last x days: {lastXdayPrice:.2f} to {current_price:.2f}) {recent_chng:.2f} ({recent_perc_chng:.2f}%)"""
+    return f"""**{ticker}: {buy_price} , Qty: {qty} {"CHECK !!!" if perc_change < 0 or recent_perc_chng < 0 else ""}**:    
+ Total Change: {buy_price:.2f} to {current_price:.2f} {change:.2f} ({perc_change:.2f}%)
+ Since {period}: {lastXdayPrice:.2f} to {current_price:.2f} {recent_chng:.2f} ({recent_perc_chng:.2f}%)"""
     
 
 def process(period):
