@@ -45,12 +45,12 @@ def get_stock_performance(stockObj, period=def_time):
 
     # calc for buy price to today    
     change = (current_price - buy_price) * qty
-    perc_change = change / buy_price * 100
+    perc_change = ((current_price - buy_price) / buy_price) * 100
 
 
     # calc for last x'th day to today    
     recent_chng = (current_price - lastXdayPrice)
-    recent_perc_chng = recent_chng / lastXdayPrice * 100
+    recent_perc_chng = ((current_price - lastXdayPrice) / lastXdayPrice) * 100
     
     # print(f"Stock: {ticker}")
     # print(f"Current Price: ₹{current_price:.2f}")
