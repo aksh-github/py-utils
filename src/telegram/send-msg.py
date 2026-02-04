@@ -77,7 +77,7 @@ def send_message():
         logging.error(f"Error: {e}")
 
 if __name__ == '__main__':
-    logging.info("Scheduler started")
+    # logging.info("Scheduler started")
     send_message()
 
     # Schedule job
