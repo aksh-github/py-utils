@@ -13,8 +13,10 @@ def market(to):
 def timesheet(to):
     print(f"Timesheet function executed")
 
-# Load JSON config
-with open('./src/telegram/schedule.json') as f:
+# Load JSON config for docker server
+with open('./schedule.json') as f:
+# Load JSON config for local testing
+# with open('./src/telegram/schedule.json') as f:
     config = json.load(f)
 
 # Map function names to actual functions
