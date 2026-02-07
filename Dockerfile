@@ -4,6 +4,8 @@ FROM python:3.11-slim
 # Set the working directory in the container
 WORKDIR /app
 
+ENV PYTHONUNBUFFERED=1
+
 # Install timezone data and set timezone
 RUN apt-get update && apt-get install -y tzdata && rm -rf /var/lib/apt/lists/*
 ENV TZ=Asia/Kolkata
@@ -17,9 +19,9 @@ COPY src/telegram /app/src
 
 # Set the command to run when the container starts
 # CMD ["python", "src/send-msg.py"]
-CMD ["python", "src/scheduler.py"]
+CMD ["python", "-u", "src/scheduler.py"]
 
 # Use it like:
-# docker build -t stock-report .
+# docker build -t py-scheduler .
 # and then
-# docker run --env-file .env stock-report   # use -d to run in detached mode
+# docker run -d --env-file .env py-scheduler   # use -d to run in detached mode
