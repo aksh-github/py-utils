@@ -84,7 +84,7 @@ if __name__ == '__main__':
     tz = pytz.timezone('Asia/Kolkata')
 
     # schedule.every().day.at("16:00").do(send_message)
-    times = ["12:00", "14:30", "18:00"]
+    times = ["11:00", "14:30", "18:00"]
     for scheduled_time in times:
         schedule.every().day.at(scheduled_time).do(send_message)
 

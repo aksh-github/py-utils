@@ -1,0 +1,38 @@
+{
+  "daily": [
+    {
+      "function_name": "market",
+      "time": "11:00",
+      "to": "GROUP_ID"
+    },
+    {
+      "function_name": "market",
+      "time": "14:30",
+      "to": "GROUP_ID"
+    },
+    {
+      "function_name": "market",
+      "time": "18:09",
+      "to": "GROUP_ID"
+    },
+    {
+      "function_name": "timesheet",
+      "time": "12:00"
+    },
+    {
+      "function_name": "timesheet",
+      "time": "15:00"
+    },
+    {
+      "function_name": "timesheet",
+      "time": "19:09"
+    }
+  ],
+  "monthly": [
+    {
+      "function_name": "func4",
+      "day": 1,
+      "time": "09:00"
+    }
+  ]
+}

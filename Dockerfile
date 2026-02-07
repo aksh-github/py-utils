@@ -12,9 +12,10 @@ RUN pip install -r requirements.txt
 COPY src/telegram /app/src
 
 # Set the command to run when the container starts
-CMD ["python", "src/send-msg.py"]
+# CMD ["python", "src/send-msg.py"]
+CMD ["python", "src/scheduler.py"]
 
 # Use it like:
 # docker build -t stock-report .
 # and then
-# docker run --env-file .env stock-report
+# docker run --env-file .env stock-report   # use -d to run in detached mode
