@@ -43,7 +43,7 @@ def process():
 
     # Run scheduler
     while True:
-        pytz.timezone('Asia/Kolkata')
+        # pytz.timezone('Asia/Kolkata')
         schedule.run_pending()
         time.sleep(1)
 
