@@ -78,11 +78,16 @@ def send_message():
 
 if __name__ == '__main__':
     # logging.info("Scheduler started")
-    send_message()
+    # send_message()
 
     # Schedule job
-    # tz = pytz.timezone('Asia/Kolkata')
+    tz = pytz.timezone('Asia/Kolkata')
+
     # schedule.every().day.at("16:00").do(send_message)
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    times = ["12:00", "14:30", "18:00"]
+    for scheduled_time in times:
+        schedule.every().day.at(scheduled_time).do(send_message)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
