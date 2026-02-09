@@ -45,7 +45,7 @@ def dummy_send_message():
 
 
 # this is actual func
-def send_message():
+def send_update():
 
     # Load secrets from .env
     load_dotenv()
@@ -76,18 +76,3 @@ def send_message():
     except Exception as e:
         logging.error(f"Error: {e}")
 
-if __name__ == '__main__':
-    # logging.info("Scheduler started")
-    # send_message()
-
-    # Schedule job
-    tz = pytz.timezone('Asia/Kolkata')
-
-    # schedule.every().day.at("16:00").do(send_message)
-    times = ["11:00", "14:30", "18:00"]
-    for scheduled_time in times:
-        schedule.every().day.at(scheduled_time).do(send_message)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(1)

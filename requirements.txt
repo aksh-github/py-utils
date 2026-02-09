@@ -8,5 +8,5 @@
 yfinance
 telethon
 schedule
-pytz
+requests
 python-dotenv

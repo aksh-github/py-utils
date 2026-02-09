@@ -1,25 +1,52 @@
 import schedule
 import json
 import time
-import pytz
-import importlib
+import requests
+from market import send_update
 
 # ... (func1, func2, etc. definitions)
 
 
 def market(to):
-    print(f"Market function executed for group {to}")
+    # print(f"Market function executed for group {to}")
+    send_update()
     
 def timesheet(to):
     print(f"Timesheet function executed")
 
 
+def read_json_from_github(repo_url):
+    """
+    Reads a JSON file from a GitHub repository.
+
+    Args:
+        repo_url (str): URL of the JSON file in the GitHub repository.
+                         Format: https://raw.githubusercontent.com/username/repo_name/branch_name/path/to/file.json
+
+    Returns:
+        dict: JSON data from the file.
+    """
+    try:
+        response = requests.get(repo_url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None
+
+
 def process():
     # Load JSON config for docker server
-    with open('./src/schedule.json') as f:
+    # with open('./src/schedule.json') as f:
     # Load JSON config for local testing
     # with open('./src/telegram/schedule.json') as f:
-        config = json.load(f)
+
+    repo_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/schedule.json"
+    config = read_json_from_github(repo_url)
+
+    if config is None:
+        print("Failed to load configuration. Exiting.")
+        return
 
     # Map function names to actual functions
     func_map = {
