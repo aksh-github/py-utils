@@ -2,6 +2,7 @@ import yfinance as yf
 from datetime import datetime
 import logging
 import requests
+import random
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -18,7 +19,7 @@ def read_reomte(url):
 
 # Read stocks file
 def read_stocks():
-    file_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/stocks.txt"
+    file_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/stocks.txt?t=" + str(random.randint(1, 1000))
     content = read_reomte(file_url)
     
     if content is None:
@@ -70,6 +71,13 @@ def get_stock_performance(stockObj, period=def_time):
     current_price = data['Close'].iloc[-1]  # today's price
     # yest_price = data['Close'].iloc[-2]     # yest's price
 
+    if period == '1y':
+        six_month_price = data['Close'].iloc[-126]     # price before 6 month
+        six_month_perc_change = ((current_price - six_month_price) / six_month_price) * 100
+        three_month_price = data['Close'].iloc[-63]     # price before 3 month
+        three_month_perc_change = ((current_price - three_month_price) / three_month_price) * 100
+        # one_month_price = data['Close'].iloc[-21]     # price before 1 month
+
     lastXdayPrice =  data['Close'].iloc[0]     # price before 7 / 15 d etc.
 
 
@@ -92,8 +100,11 @@ def get_stock_performance(stockObj, period=def_time):
     # ({lastXdayPrice:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)
     # (Since yest: {yest_price:.2f} to {current_price:.2f}) {recent_chng:.2f} ({recent_perc_chng:.2f}%)"""
 
-    return f"""**{ticker}: {buy_price} , Qty: {qty} {"CHECK !!!" if perc_change < 0 or recent_perc_chng < 0 else ""}**:    
- Total Change: {buy_price:.2f} to {current_price:.2f} {change:.2f} ({perc_change:.2f}%)
+    return f"""**{ticker}: {buy_price} , Qty: {qty} {"⚠️" if perc_change < 0 or recent_perc_chng < 0 else ""}**:    
+ **Current Price: {current_price:.2f}**
+ **Total Change: {change:.2f} ({perc_change:.2f}%)**
+ 3 Mon: {three_month_perc_change:.2f}%
+ 6 Mon: {six_month_perc_change:.2f}%
  Since {period}: {lastXdayPrice:.2f} to {current_price:.2f} {recent_chng:.2f} ({recent_perc_chng:.2f}%)"""
     
 

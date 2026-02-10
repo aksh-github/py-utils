@@ -59,7 +59,7 @@ def send_update():
     # print(get_stock_performance("muthootfin.NS"))
     # print(process())
 
-    timeperiod = '15d'    
+    timeperiod = '1y'    
     message = process(timeperiod)
     # print(message)
 
@@ -76,3 +76,4 @@ def send_update():
     except Exception as e:
         logging.error(f"Error: {e}")
 
+# send_update()
