@@ -1,27 +1,57 @@
 import yfinance as yf
 from datetime import datetime
 import logging
+import requests
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+def read_reomte(url):
+    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        return response.text
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error: {e}")
+        return None
+
 # Read stocks file
 def read_stocks():
-    with open('./src/telegram/stocks.txt', 'r') as f:
-        stocks = []
-        for line in f:
-            line = line.strip()
-            if line == '':
-                break
-            # Split by comma
-            data = line.split(',')
-            # stock = [0].strip()
-            stocks.append({
-                'stock': data[0],
-                'buy_price': float(data[1]),
-                'qty': int(data[2]),
-            })
+    file_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/stocks.txt"
+    content = read_reomte(file_url)
+    
+    if content is None:
+        logging.error("Failed to load stocks data. Exiting.")
+        exit(1)
+    stocks = []
+    for line in content.splitlines():
+        line = line.strip()
+        if line == '':
+            continue
+        # Split by comma
+        data = line.split(',')
+        stocks.append({
+            'stock': data[0],
+            'buy_price': float(data[1]),
+            'qty': int(data[2]),
+        })
     return stocks
+    # with open('./src/telegram/stocks.txt', 'r') as f:
+    #     stocks = []
+    #     for line in f:
+    #         line = line.strip()
+    #         if line == '':
+    #             break
+    #         # Split by comma
+    #         data = line.split(',')
+    #         # stock = [0].strip()
+    #         stocks.append({
+    #             'stock': data[0],
+    #             'buy_price': float(data[1]),
+    #             'qty': int(data[2]),
+    #         })
+    # return stocks
 
 def_time = '7d'
 
