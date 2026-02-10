@@ -2,17 +2,36 @@ import schedule
 import json
 import time
 import requests
+import logging
+from datetime import datetime
 from market import send_update
 
-# ... (func1, func2, etc. definitions)
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 
-def market(to):
-    # print(f"Market function executed for group {to}")
-    send_update()
+def market():
+    """Execute market update"""
+    try:
+        logger.info("Executing market function...")
+        send_update()
+        logger.info("Market function completed successfully")
+    except Exception as e:
+        logger.error(f"Error in market function: {e}", exc_info=True)
+
     
-def timesheet(to):
-    print(f"Timesheet function executed")
+def timesheet():
+    """Execute timesheet function"""
+    try:
+        logger.info("Executing timesheet function...")
+        print(f"Timesheet function executed at {datetime.now()}")
+        logger.info("Timesheet function completed successfully")
+    except Exception as e:
+        logger.error(f"Error in timesheet function: {e}", exc_info=True)
 
 
 def read_json_from_github(repo_url):
@@ -28,24 +47,20 @@ def read_json_from_github(repo_url):
     """
     try:
         response = requests.get(repo_url)
-        response.raise_for_status()  # Raise an exception for bad status codes
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
+        logger.error(f"Error reading from GitHub: {e}")
         return None
 
 
 def process():
-    # Load JSON config for docker server
-    # with open('./src/schedule.json') as f:
-    # Load JSON config for local testing
-    # with open('./src/telegram/schedule.json') as f:
-
+    """Load schedule config and schedule jobs"""
     repo_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/schedule.json"
     config = read_json_from_github(repo_url)
 
     if config is None:
-        print("Failed to load configuration. Exiting.")
+        logger.error("Failed to load configuration from GitHub. Exiting.")
         return
 
     # Map function names to actual functions
@@ -54,28 +69,42 @@ def process():
         'timesheet': timesheet,
     }
 
+    scheduled_jobs = 0
+    
     # Schedule jobs
     for freq, jobs in config.items():
         for job in jobs:
             func = func_map.get(job['function_name'])
+            if func is None:
+                logger.warning(f"Function '{job['function_name']}' not found in func_map")
+                continue
+                
             if freq == 'daily':
-                schedule.every().day.at(job['time']).do(func, job['to'] if 'to' in job else None)
+                schedule.every().day.at(job['time']).do(func)
+                logger.info(f"Scheduled {job['function_name']} daily at {job['time']}")
+                scheduled_jobs += 1
             elif freq == 'hourly':
                 schedule.every().hour.do(func)
+                logger.info(f"Scheduled {job['function_name']} hourly")
+                scheduled_jobs += 1
             elif freq == 'monthly':
-                # schedule library doesn't support monthly directly
-                # use a workaround or consider APScheduler
-                print("Monthly scheduling not directly supported by schedule library")
-            # Add more frequencies as needed
+                logger.warning("Monthly scheduling not directly supported by schedule library")
+            else:
+                logger.warning(f"Unknown frequency: {freq}")
 
+    logger.info(f"Total jobs scheduled: {scheduled_jobs}")
+    
     # Run scheduler
     while True:
-        # pytz.timezone('Asia/Kolkata')
-        schedule.run_pending()
-        time.sleep(1)
+        try:
+            schedule.run_pending()
+            time.sleep(1)
+        except Exception as e:
+            logger.error(f"Error in scheduler loop: {e}", exc_info=True)
+            time.sleep(5)  # Wait before retrying
+
 
 if __name__ == '__main__':
-    print("Container is running...")
+    logger.info("Container is running...")
+    logger.info("Starting scheduler...")
     process()
-    # while True:
-    #     time.sleep(1)
