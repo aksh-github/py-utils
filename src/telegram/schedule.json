@@ -2,7 +2,7 @@
   "daily": [
     {
       "function_name": "market",
-      "time": "11:00",
+      "time": "11:20",
       "to": "GROUP_ID"
     },
     {
