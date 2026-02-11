@@ -33,6 +33,14 @@ def timesheet():
     except Exception as e:
         logger.error(f"Error in timesheet function: {e}", exc_info=True)
 
+def month_test():
+    """Execute month test function"""
+    try:
+        logger.info("Executing month_test function...")
+        print(f"Month test function executed at {datetime.now()}")
+        logger.info("Month test function completed successfully")
+    except Exception as e:
+        logger.error(f"Error in month_test function: {e}", exc_info=True)
 
 def read_json_from_github(repo_url):
     """
@@ -67,7 +75,7 @@ def process():
     func_map = {
         'market': market,
         'timesheet': timesheet,
-        'month_test': lambda: logger.info(f"Month test executed at {datetime.now()}")
+        'month_test': month_test
     }
 
     scheduled_jobs = 0
