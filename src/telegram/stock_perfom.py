@@ -70,6 +70,7 @@ def get_stock_performance(stockObj, period=def_time):
                 
     current_price = data['Close'].iloc[-1]  # today's price
     # yest_price = data['Close'].iloc[-2]     # yest's price
+    three_month_perc_change = six_month_perc_change = 0.0
 
     if period == '1y' and len(data) >= 126:
         six_month_price = data['Close'].iloc[-126]     # price before 6 month
