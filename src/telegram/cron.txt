@@ -1,0 +1,12 @@
+
+Cron Job
+========
+
+To support monthly scheduling, you need to add following enry in cronjob.
+
+Consider the timezone for Server on which you are running cronjob. Based on that you need to change min and hours (first 2 in below line).
+
+Ideally reboot the docker container named py-scheduler on 12:05 AM IST.
+
+
+0 12 * * * docker restart py-scheduler

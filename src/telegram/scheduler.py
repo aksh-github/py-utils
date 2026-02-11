@@ -67,6 +67,7 @@ def process():
     func_map = {
         'market': market,
         'timesheet': timesheet,
+        'month_test': lambda: logger.info(f"Month test executed at {datetime.now()}")
     }
 
     scheduled_jobs = 0
@@ -88,7 +89,14 @@ def process():
                 logger.info(f"Scheduled {job['function_name']} hourly")
                 scheduled_jobs += 1
             elif freq == 'monthly':
-                logger.warning("Monthly scheduling not directly supported by schedule library")
+                logger.warning("Need a cron job for monthly scheduling. Refer cron.txt for details.")
+
+                current_day = datetime.now().day
+
+                if current_day == job['day']:
+                    schedule.every().day.at(job['time']).do(func)
+                    logger.info(f"Scheduled {job['function_name']} monthly on day {job['day']} at {job['time']}")
+                    scheduled_jobs += 1
             else:
                 logger.warning(f"Unknown frequency: {freq}")
 

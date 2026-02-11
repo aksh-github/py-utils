@@ -30,9 +30,14 @@
   ],
   "monthly": [
     {
-      "function_name": "func4",
-      "day": 1,
-      "time": "09:00"
+      "function_name": "month_test",
+      "day": 11,
+      "time": "17:50"
+    },
+    {
+      "function_name": "month_test",
+      "day": 12,
+      "time": "12:00"
     }
   ]
 }
