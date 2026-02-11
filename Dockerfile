@@ -24,7 +24,7 @@ CMD ["python", "-u", "src/scheduler.py"]
 # Use it like:
 # docker build -t py-scheduler .
 # and then
-# docker run -d --env-file .env py-scheduler   # use -d to run in detached mode
+# docker run -d --name py-scheduler --env-file .env py-scheduler   # use -d to run in detached mode
 
 # To check logs:
 # docker logs -f id
