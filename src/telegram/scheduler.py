@@ -89,9 +89,13 @@ def process():
                 continue
                 
             if freq == 'daily':
-                schedule.every().day.at(job['time']).do(func)
-                logger.info(f"Scheduled {job['function_name']} daily at {job['time']}")
-                scheduled_jobs += 1
+                current_time = datetime.now().strftime("%H:%M")
+                if current_time < job['time']:
+                    schedule.every().day.at(job['time']).do(func)
+                    logger.info(f"Scheduled {job['function_name']} daily at {job['time']}")
+                    scheduled_jobs += 1
+                else:
+                    logger.info(f"Skipped scheduling {job['function_name']} daily at {job['time']} (time has passed)")
             elif freq == 'hourly':
                 schedule.every().hour.do(func)
                 logger.info(f"Scheduled {job['function_name']} hourly")
@@ -101,10 +105,12 @@ def process():
 
                 current_day = datetime.now().day
 
-                if current_day == job['day']:
+                if current_day == job['day'] and datetime.now().strftime("%H:%M") < job['time']:
                     schedule.every().day.at(job['time']).do(func)
                     logger.info(f"Scheduled {job['function_name']} monthly on day {job['day']} at {job['time']}")
                     scheduled_jobs += 1
+                else:
+                    logger.info(f"Skipped scheduling monthly job for {job['function_name']} (day mismatch or time passed)")
             else:
                 logger.warning(f"Unknown frequency: {freq}")
 
