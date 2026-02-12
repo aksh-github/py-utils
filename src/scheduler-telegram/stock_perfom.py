@@ -19,7 +19,7 @@ def read_reomte(url):
 
 # Read stocks file
 def read_stocks():
-    file_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/stocks.txt?t=" + str(random.randint(1, 1000))
+    file_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/scheduler-telegram/stocks.txt?t=" + str(random.randint(1, 1000))
     content = read_reomte(file_url)
     
     if content is None:

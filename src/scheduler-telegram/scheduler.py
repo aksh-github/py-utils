@@ -73,7 +73,7 @@ def parse_times(time_field):
 
 def process():
     """Load schedule config and schedule jobs"""
-    repo_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/schedule.json"
+    repo_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/scheduler-telegram/schedule.json"
     config = read_json_from_github(repo_url)
 
     if config is None:
