@@ -62,6 +62,15 @@ def read_json_from_github(repo_url):
         return None
 
 
+def parse_times(time_field):
+    """Parse time field, which can be a single time or comma-separated times."""
+    if isinstance(time_field, str):
+        return [t.strip() for t in time_field.split(',')]
+    elif isinstance(time_field, list):
+        return [t.strip() for t in time_field]
+    else:
+        return []
+
 def process():
     """Load schedule config and schedule jobs"""
     repo_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/telegram/schedule.json"
@@ -87,15 +96,19 @@ def process():
             if func is None:
                 logger.warning(f"Function '{job['function_name']}' not found in func_map")
                 continue
-                
+
+            # Parse times (support comma-separated)
+            times = parse_times(job.get('time', ''))
+
             if freq == 'daily':
                 current_time = datetime.now().strftime("%H:%M")
-                if current_time < job['time']:
-                    schedule.every().day.at(job['time']).do(func)
-                    logger.info(f"Scheduled {job['function_name']} daily at {job['time']}")
-                    scheduled_jobs += 1
-                else:
-                    logger.info(f"Skipped scheduling {job['function_name']} daily at {job['time']} (time has passed)")
+                for t in times:
+                    if current_time < t:
+                        schedule.every().day.at(t).do(func)
+                        logger.info(f"Scheduled {job['function_name']} daily at {t}")
+                        scheduled_jobs += 1
+                    else:
+                        logger.info(f"Skipped scheduling {job['function_name']} daily at {t} (time has passed)")
             elif freq == 'hourly':
                 schedule.every().hour.do(func)
                 logger.info(f"Scheduled {job['function_name']} hourly")
@@ -104,13 +117,13 @@ def process():
                 logger.warning("Need a cron job for monthly scheduling. Refer cron.txt for details.")
 
                 current_day = datetime.now().day
-
-                if current_day == job['day'] and datetime.now().strftime("%H:%M") < job['time']:
-                    schedule.every().day.at(job['time']).do(func)
-                    logger.info(f"Scheduled {job['function_name']} monthly on day {job['day']} at {job['time']}")
-                    scheduled_jobs += 1
-                else:
-                    logger.info(f"Skipped scheduling monthly job for {job['function_name']} (day mismatch or time passed)")
+                for t in times:
+                    if current_day == job['day'] and datetime.now().strftime("%H:%M") < t:
+                        schedule.every().day.at(t).do(func)
+                        logger.info(f"Scheduled {job['function_name']} monthly on day {job['day']} at {t}")
+                        scheduled_jobs += 1
+                    else:
+                        logger.info(f"Skipped scheduling monthly job for {job['function_name']} at {t} (day mismatch or time passed)")
             else:
                 logger.warning(f"Unknown frequency: {freq}")
 
