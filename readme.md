@@ -28,3 +28,7 @@ source venv/bin/activate  # On macOS/Linux
 ```bash
 pip install -r requirements.txt
 ```
+
+## Scheduler Telegram
+
+This program allows you to schedule programs and run notifications etc through Telegram.
