@@ -88,6 +88,7 @@ def process():
     }
 
     scheduled_jobs = 0
+    monthly_warning_logged = False
     
     # Schedule jobs
     for freq, jobs in config.items():
@@ -114,7 +115,10 @@ def process():
                 logger.info(f"Scheduled {job['function_name']} hourly")
                 scheduled_jobs += 1
             elif freq == 'monthly':
-                logger.warning("Need a cron job for monthly scheduling. Refer cron.txt for details.")
+
+                if not monthly_warning_logged:
+                    logger.warning("** Monthly ** Need a cron job for monthly scheduling to work. Refer cron.txt for details.")
+                    monthly_warning_logged = True
 
                 current_day = datetime.now().day
                 for t in times:
