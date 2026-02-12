@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy the source code of your application
-COPY src/telegram /app/src
+COPY src/scheduler-telegram /app/src
 
 # Set the command to run when the container starts
 # CMD ["python", "src/send-msg.py"]
