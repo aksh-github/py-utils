@@ -8,7 +8,7 @@
     },
     {
       "function_name": "timesheet",
-      "time": "15:00,23:25,23:44",
+      "time": "15:00,23:25,23:59",
       "script": "test"
     }
   ],
