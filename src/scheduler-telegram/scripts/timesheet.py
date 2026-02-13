@@ -20,9 +20,8 @@ def get_environment_variables():
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def main():
-    message = "Pay MSEB BILL, WATER BILL, MGL, PROPERTY TAX"
-    logging.info("main executed")
-
+    message = "Timesheet"
+    
     # Load secrets from .env (parent directory)
     env_path = Path(__file__).parent.parent / '.env'
     load_dotenv(env_path)
