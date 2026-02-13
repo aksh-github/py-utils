@@ -124,8 +124,10 @@ def process():
                     monthly_warning_logged = True
 
                 current_day = datetime.now().day
+                # Support both single day and array of days
+                job_days = job['day'] #if isinstance(job['day'], list) else [job['day']]
                 for t in times:
-                    if current_day == job['day'] and datetime.now().strftime("%H:%M") < t:
+                    if current_day in job_days and datetime.now().strftime("%H:%M") < t:
 
                         # check if script file exists
                         if not is_script_exists(job['script']):
@@ -134,7 +136,7 @@ def process():
 
 
                         schedule.every().day.at(t).do(run_script, f"{job['script']}.py")
-                        logger.info(f"Scheduled {job['script']} monthly on day {job['day']} at {t}")
+                        logger.info(f"Scheduled {job['script']} monthly on day(s) {job_days} at {t}")
                         scheduled_jobs += 1
                     else:
                         logger.info(f"Skipped scheduling monthly job for {job['script']} at {current_day} {t} (day mismatch or time passed)")
