@@ -172,9 +172,6 @@ def process():
 if __name__ == '__main__':
     logger.info("Container is running...")
     logger.info("Starting scheduler...")
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    logger.info(script_dir)
-    logger.info(os.path.join(script_dir, 'scripts', f"test.py"))
     process()
     
 
