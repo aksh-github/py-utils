@@ -1,10 +1,11 @@
 import schedule
-import json
+import os
 import time
 import requests
 import logging
 from datetime import datetime
-from market import send_update
+import subprocess
+
 
 # Setup logging
 logging.basicConfig(
@@ -13,34 +14,29 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def is_script_exists(script_name):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    script_path = os.path.join(script_dir, 'scripts', f"{script_name}.py")
+    return os.path.isfile(script_path)
 
-def market():
-    """Execute market update"""
-    try:
-        logger.info("Executing market function...")
-        send_update()
-        logger.info("Market function completed successfully")
-    except Exception as e:
-        logger.error(f"Error in market function: {e}", exc_info=True)
 
-    
-def timesheet():
-    """Execute timesheet function"""
+def run_script(script_name):
     try:
-        logger.info("Executing timesheet function...")
-        print(f"Timesheet function executed at {datetime.now()}")
-        logger.info("Timesheet function completed successfully")
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        script_path = os.path.join(script_dir, 'scripts', script_name)
+        subprocess.run(['python', script_path])
     except Exception as e:
-        logger.error(f"Error in timesheet function: {e}", exc_info=True)
+        logger.error(f"Error running {script_path}: {e}")
 
-def month_test():
-    """Execute month test function"""
-    try:
-        logger.info("Executing month_test function...")
-        print(f"Month test function executed at {datetime.now()}")
-        logger.info("Month test function completed successfully")
-    except Exception as e:
-        logger.error(f"Error in month_test function: {e}", exc_info=True)
+# def market():
+#     """Execute market update"""
+#     try:
+#         logger.info("Executing market function...")
+#         send_update()
+#         logger.info("Market function completed successfully")
+#     except Exception as e:
+#         logger.error(f"Error in market function: {e}", exc_info=True)
+
 
 def read_json_from_github(repo_url):
     """
@@ -81,11 +77,11 @@ def process():
         return
 
     # Map function names to actual functions
-    func_map = {
-        'market': market,
-        'timesheet': timesheet,
-        'month_test': month_test
-    }
+    # func_map = {
+    #     'market': market,
+    #     'timesheet': timesheet,
+    #     'month_test': month_test
+    # }
 
     scheduled_jobs = 0
     monthly_warning_logged = False
@@ -93,10 +89,10 @@ def process():
     # Schedule jobs
     for freq, jobs in config.items():
         for job in jobs:
-            func = func_map.get(job['function_name'])
-            if func is None:
-                logger.warning(f"Function '{job['function_name']}' not found in func_map")
-                continue
+            # func = func_map.get(job['script'])
+            # if func is None:
+            #     logger.warning(f"Function '{job['script']}' not found in func_map")
+            #     continue
 
             # Parse times (support comma-separated)
             times = parse_times(job.get('time', ''))
@@ -105,15 +101,22 @@ def process():
                 current_time = datetime.now().strftime("%H:%M")
                 for t in times:
                     if current_time < t:
-                        schedule.every().day.at(t).do(func)
-                        logger.info(f"Scheduled {job['function_name']} daily at {t}")
+
+                        # check if script file exists
+                        # logger.info(os.path.join(script_dir, 'scripts', f"{job['script']}.py"))
+                        if not is_script_exists(job['script']):
+                            logger.warning(f"Script file {job['script']}.py does not exist")
+                            continue
+
+                        schedule.every().day.at(t).do(run_script, f"{job['script']}.py")
+                        logger.info(f"Scheduled {job['script']} daily at {t}")
                         scheduled_jobs += 1
                     else:
-                        logger.info(f"Skipped scheduling {job['function_name']} daily at {t} (time has passed)")
-            elif freq == 'hourly':
-                schedule.every().hour.do(func)
-                logger.info(f"Scheduled {job['function_name']} hourly")
-                scheduled_jobs += 1
+                        logger.info(f"Skipped scheduling {job['script']} daily at {t} (time has passed)")
+            # elif freq == 'hourly':
+            #     schedule.every().hour.do(func)
+            #     logger.info(f"Scheduled {job['script']} hourly")
+            #     scheduled_jobs += 1
             elif freq == 'monthly':
 
                 if not monthly_warning_logged:
@@ -123,11 +126,18 @@ def process():
                 current_day = datetime.now().day
                 for t in times:
                     if current_day == job['day'] and datetime.now().strftime("%H:%M") < t:
-                        schedule.every().day.at(t).do(func)
-                        logger.info(f"Scheduled {job['function_name']} monthly on day {job['day']} at {t}")
+
+                        # check if script file exists
+                        if not is_script_exists(job['script']):
+                            logger.warning(f"Script file {job['script']}.py does not exist")
+                            continue
+
+
+                        schedule.every().day.at(t).do(run_script, f"{job['script']}.py")
+                        logger.info(f"Scheduled {job['script']} monthly on day {job['day']} at {t}")
                         scheduled_jobs += 1
                     else:
-                        logger.info(f"Skipped scheduling monthly job for {job['function_name']} at {t} (day mismatch or time passed)")
+                        logger.info(f"Skipped scheduling monthly job for {job['script']} at {current_day} {t} (day mismatch or time passed)")
             else:
                 logger.warning(f"Unknown frequency: {freq}")
 
@@ -146,4 +156,9 @@ def process():
 if __name__ == '__main__':
     logger.info("Container is running...")
     logger.info("Starting scheduler...")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    logger.info(script_dir)
+    logger.info(os.path.join(script_dir, 'scripts', f"test.py"))
     process()
+    
+
