@@ -61,19 +61,19 @@ def send_update():
 
     timeperiod = '1y'    
     message = process(timeperiod)
-    print(message)
+    # print(message)
 
-    # try:
-    #     with TelegramClient(StringSession(), env['api_id'], env['api_hash']).start(bot_token=env['bot_token']) as client:
+    try:
+        with TelegramClient(StringSession(), env['api_id'], env['api_hash']).start(bot_token=env['bot_token']) as client:
 
-    #         logging.info("Sending message...")
-    #         # Message
-    #         now = datetime.now()
-    #         client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
-    #         client.send_message(int(env['group_id']), message, parse_mode="md")
+            logging.info("Sending message...")
+            # Message
+            now = datetime.now()
+            client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
+            client.send_message(int(env['group_id']), message, parse_mode="md")
 
-    #         logging.info("Message sent successfully!")
-    # except Exception as e:
-    #     logging.error(f"Error: {e}")
+            logging.info("Message sent successfully!")
+    except Exception as e:
+        logging.error(f"Error: {e}")
 
 send_update()
