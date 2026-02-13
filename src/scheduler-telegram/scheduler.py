@@ -85,6 +85,9 @@ def process():
 
     scheduled_jobs = 0
     monthly_warning_logged = False
+
+    scheduled = []
+    skipped = []
     
     # Schedule jobs
     for freq, jobs in config.items():
@@ -109,10 +112,12 @@ def process():
                             continue
 
                         schedule.every().day.at(t).do(run_script, f"{job['script']}.py")
-                        logger.info(f"Scheduled {job['script']} daily at {t}")
+                        # logger.info(f"Scheduled {job['script']} daily at {t}")
+                        scheduled.append(f"[DAILY]: Scheduled {job['script']} at {t}")
                         scheduled_jobs += 1
                     else:
-                        logger.info(f"Skipped scheduling {job['script']} daily at {t} (time has passed)")
+                        # logger.info(f"Skipped scheduling {job['script']} daily at {t} (time has passed)")
+                        skipped.append(f"[DAILY]: Skipped scheduling {job['script']} at {t} (time has passed)")
             # elif freq == 'hourly':
             #     schedule.every().hour.do(func)
             #     logger.info(f"Scheduled {job['script']} hourly")
@@ -136,14 +141,23 @@ def process():
 
 
                         schedule.every().day.at(t).do(run_script, f"{job['script']}.py")
-                        logger.info(f"Scheduled {job['script']} monthly on day(s) {job_days} at {t}")
+                        # logger.info(f"Scheduled {job['script']} monthly on day(s) {job_days} at {t}")
+                        scheduled.append(f"[MONTHLY]: Scheduled {job['script']} on day(s) {job_days} at {t}")
                         scheduled_jobs += 1
                     else:
-                        logger.info(f"Skipped scheduling monthly job for {job['script']} at {current_day} {t} (day mismatch or time passed)")
+                        # logger.info(f"Skipped scheduling monthly job for {job['script']} at {current_day} {t} (day mismatch or time passed)")
+                        skipped.append(f"[MONTHLY]: Skipped scheduling for {job['script']} on day {current_day} at {t} (day mismatch or time passed)")
             else:
                 logger.warning(f"Unknown frequency: {freq}")
 
     logger.info(f"Total jobs scheduled: {scheduled_jobs}")
+
+    # log scheduled and skipped jobs
+    for s in scheduled:
+        logger.info(s)
+
+    for s in skipped:
+        logger.info(s)
     
     # Run scheduler
     while True:
