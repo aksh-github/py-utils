@@ -18,5 +18,22 @@
       "message": "Pay MSEB BILL, WATER BILL, MGL, PROPERTY TAX"
     }
   ],
-  "dates": []
+  "dates": [
+    {
+      "script": "monthly-reminders",
+      "day": [
+        "2026-02-18",
+        "2026-05-05",
+        "2026-05-10",
+        "2026-05-15",
+        "2026-05-18",
+        "2026-05-20",
+        "2026-05-22",
+        "2026-05-24",
+        "2026-05-25"
+      ],
+      "time": "11:00,17:00",
+      "message": "Insurance Renewal Reminder (Expiry on 26th May)"
+    }
+  ]
 }

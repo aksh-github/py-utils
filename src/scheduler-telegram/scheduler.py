@@ -70,6 +70,21 @@ def parse_times(time_field):
     else:
         return []
 
+
+def run_script_on_date(script_name, target_date, message=None):
+    """Return a no-arg job function that runs `script_name` only when today's date matches `target_date`.
+
+    `target_date` must be in 'YYYY-MM-DD' format.
+    """
+    def _job():
+        try:
+            if datetime.now().strftime("%Y-%m-%d") == target_date:
+                run_script(script_name, message=message)
+        except Exception as e:
+            logger.error(f"Error in run_script_on_date for {script_name} on {target_date}: {e}")
+
+    return _job
+
 def process():
     """Load schedule config and schedule jobs"""
     repo_url = "https://raw.githubusercontent.com/aksh-github/py-utils/refs/heads/master/src/scheduler-telegram/schedule.json"
@@ -150,6 +165,26 @@ def process():
                     else:
                         # logger.info(f"Skipped scheduling monthly job for {job['script']} at {current_day} {t} (day mismatch or time passed)")
                         skipped.append(f"[MONTHLY]: Skipped scheduling for {job['script']} on day {current_day} at {t} (day mismatch or time passed)")
+            elif freq == 'dates':
+                # Support both single date and array of dates
+                job_dates = job['date'] #if isinstance(job['date'], list) else [job['date']]
+                for t in times:
+                    current_date_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+                    for d in job_dates:
+                        job_date_time = f"{d} {t}"
+                        if current_date_time < job_date_time:
+
+                            # check if script file exists
+                            if not is_script_exists(job['script']):
+                                logger.warning(f"Script file {job['script']}.py does not exist")
+                                continue
+
+                            # Schedule a daily-at-time wrapper that will only execute on the matching date
+                            schedule.every().day.at(t).do(run_script_on_date(f"{job['script']}.py", d, message=job.get('message', '')))
+                            scheduled.append(f"[DATES]: Scheduled {job['script']} on {d} at {t}")
+                            scheduled_jobs += 1
+                        else:
+                            skipped.append(f"[DATES]: Skipped scheduling for {job['script']} on {d} at {t} (date/time has passed)")
             else:
                 logger.warning(f"Unknown frequency: {freq}")
 
