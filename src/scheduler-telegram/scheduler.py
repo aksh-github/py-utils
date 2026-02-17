@@ -167,13 +167,13 @@ def process():
                         skipped.append(f"[MONTHLY]: Skipped scheduling for {job['script']} on day {current_day} at {t} (day mismatch or time passed)")
             elif freq == 'dates':
                 # Support both single date and array of dates
-                job_dates = job['date'] #if isinstance(job['date'], list) else [job['date']]
+                job_dates = job['day']
+                current_date = datetime.now().strftime("%Y-%m-%d")
+                current_time = datetime.now().strftime("%H:%M")
                 for t in times:
-                    current_date_time = datetime.now().strftime("%Y-%m-%d %H:%M")
                     for d in job_dates:
-                        job_date_time = f"{d} {t}"
-                        if current_date_time < job_date_time:
-
+                        # Only schedule if date is today AND time hasn't passed
+                        if d == current_date and current_time < t:
                             # check if script file exists
                             if not is_script_exists(job['script']):
                                 logger.warning(f"Script file {job['script']}.py does not exist")
@@ -184,7 +184,7 @@ def process():
                             scheduled.append(f"[DATES]: Scheduled {job['script']} on {d} at {t}")
                             scheduled_jobs += 1
                         else:
-                            skipped.append(f"[DATES]: Skipped scheduling for {job['script']} on {d} at {t} (date/time has passed)")
+                            skipped.append(f"[DATES]: Skipped scheduling for {job['script']} on {d} at {t} (not today or time has passed or in future)")
             else:
                 logger.warning(f"Unknown frequency: {freq}")
 
@@ -194,8 +194,8 @@ def process():
     for s in scheduled:
         logger.info(s)
 
-    for s in skipped:
-        logger.info(s)
+    # for s in skipped:
+    #     logger.info(s)
     
     # Run scheduler
     while True:
