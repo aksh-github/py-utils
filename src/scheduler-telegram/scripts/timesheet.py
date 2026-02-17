@@ -3,6 +3,7 @@ import logging
 import datetime
 import os
 from pathlib import Path
+import sys
 from dotenv import load_dotenv
 from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
@@ -19,8 +20,8 @@ def get_environment_variables():
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def main():
-    message = "Timesheet"
+def main(message):
+    # message = "Timesheet"
     
     # Load secrets from .env (parent directory)
     env_path = Path(__file__).parent.parent / '.env'
@@ -44,4 +45,10 @@ def main():
     except Exception as e:
         logging.error(f"Error: {e}")
 
-main()
+# Check if arguments are provided
+if len(sys.argv) != 2:
+    logging.error("Usage: python timesheet.py <message>")
+    sys.exit(1)
+
+message = sys.argv[1]
+main(message)

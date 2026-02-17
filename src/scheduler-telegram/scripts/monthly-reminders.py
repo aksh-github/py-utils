@@ -6,6 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
+import sys
 
 # Get env variables
 def get_environment_variables():
@@ -19,8 +20,8 @@ def get_environment_variables():
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def main():
-    message = "Pay MSEB BILL, WATER BILL, MGL, PROPERTY TAX"
+def main(message):
+    # message = "Pay MSEB BILL, WATER BILL, MGL, PROPERTY TAX"
     logging.info("main executed")
 
     # Load secrets from .env (parent directory)
@@ -45,4 +46,10 @@ def main():
     except Exception as e:
         logging.error(f"Error: {e}")
 
-main()
+# Check if arguments are provided
+if len(sys.argv) != 2:
+    logging.error("Usage: python monthly-reminders.py <message>")
+    sys.exit(1)
+
+message = sys.argv[1]
+main(message)

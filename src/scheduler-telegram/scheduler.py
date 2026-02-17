@@ -20,11 +20,14 @@ def is_script_exists(script_name):
     return os.path.isfile(script_path)
 
 
-def run_script(script_name):
+def run_script(script_name, message=None):
     try:
         script_dir = os.path.dirname(os.path.abspath(__file__))
         script_path = os.path.join(script_dir, 'scripts', script_name)
-        subprocess.run(['python', script_path])
+        cmd = ['python3', script_path]
+        if message:
+            cmd.append(message)
+        subprocess.run(cmd, check=True)
     except Exception as e:
         logger.error(f"Error running {script_path}: {e}")
 
@@ -111,7 +114,7 @@ def process():
                             logger.warning(f"Script file {job['script']}.py does not exist")
                             continue
 
-                        schedule.every().day.at(t).do(run_script, f"{job['script']}.py")
+                        schedule.every().day.at(t).do(run_script, f"{job['script']}.py", message=job.get('message', ''))
                         # logger.info(f"Scheduled {job['script']} daily at {t}")
                         scheduled.append(f"[DAILY]: Scheduled {job['script']} at {t}")
                         scheduled_jobs += 1
@@ -140,7 +143,7 @@ def process():
                             continue
 
 
-                        schedule.every().day.at(t).do(run_script, f"{job['script']}.py")
+                        schedule.every().day.at(t).do(run_script, f"{job['script']}.py", message=job.get('message', ''))
                         # logger.info(f"Scheduled {job['script']} monthly on day(s) {job_days} at {t}")
                         scheduled.append(f"[MONTHLY]: Scheduled {job['script']} on day(s) {job_days} at {t}")
                         scheduled_jobs += 1
@@ -175,3 +178,4 @@ if __name__ == '__main__':
     process()
     
 
+# run_script('timesheet.py', message="Timesheet")
