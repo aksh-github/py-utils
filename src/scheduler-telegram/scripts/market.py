@@ -1,6 +1,6 @@
 import os
 import logging
-import schedule
+# import schedule
 import time
 from dotenv import load_dotenv
 from telethon.sync import TelegramClient
