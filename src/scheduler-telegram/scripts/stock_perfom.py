@@ -34,8 +34,8 @@ def read_stocks():
         data = line.split(',')
         stocks.append({
             'stock': data[0],
-            'buy_price': float(data[1]),
-            'qty': int(data[2]),
+            'buy_price': float(data[1]) if len(data) > 1 else 0.0,
+            'qty': int(data[2]) if len(data) > 2 else 0,
         })
     return stocks
     # with open('./src/telegram/stocks.txt', 'r') as f:
