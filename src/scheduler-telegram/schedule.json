@@ -15,7 +15,7 @@
       "script": "monthly-reminders",
       "day": [15, 16, 17, 28, 29, 30],
       "time": "11:00,14:30,19:00",
-      "message": "Pay MSEB BILL, WATER BILL, MGL, PROPERTY TAX"
+      "message": "Pay MSEB BILL, WATER BILL, MGL, PROPERTY TAX, **WFO**"
     }
   ],
   "dates": [
