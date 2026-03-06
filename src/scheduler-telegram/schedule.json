@@ -39,12 +39,6 @@
       "day": ["2026-02-23", "2026-02-25"],
       "time": "11:00,15:00",
       "message": "Election GBM (14th Mar)"
-    },
-    {
-      "script": "monthly-reminders",
-      "day": ["2026-03-01", "2026-03-02"],
-      "time": "11:00,19:00",
-      "message": "पुरण पोळी"
     }
   ]
 }
