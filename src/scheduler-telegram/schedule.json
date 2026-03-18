@@ -36,9 +36,9 @@
     },
     {
       "script": "monthly-reminders",
-      "day": ["2026-02-23", "2026-02-25"],
-      "time": "11:00,15:00",
-      "message": "Election GBM (14th Mar)"
+      "day": ["2026-03-26", "2026-03-25", "2026-03-27", "2026-03-28"],
+      "time": "10:30,17:00",
+      "message": "TCS Checkup"
     }
   ]
 }
