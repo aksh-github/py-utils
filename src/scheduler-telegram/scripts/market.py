@@ -69,8 +69,8 @@ def send_update():
             logging.info("Sending message...")
             # Message
             now = datetime.now()
-            client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
-            client.send_message(int(env['group_id']), message, parse_mode="md")
+            # client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
+            client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + message, parse_mode="md")
 
             logging.info("Message sent successfully!")
     except Exception as e:
