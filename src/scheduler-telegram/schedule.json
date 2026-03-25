@@ -7,7 +7,7 @@
     {
       "script": "timesheet",
       "time": "10:30,14:25,21:00",
-      "message": "Timesheet, **Office CR** "
+      "message": "Timesheet, **Office CR**, TCS Checkup at 28th"
     }
   ],
   "monthly": [
@@ -33,12 +33,6 @@
       ],
       "time": "11:00,15:00",
       "message": "Insurance Renewal Reminder (Expiry on 26th May)"
-    },
-    {
-      "script": "monthly-reminders",
-      "day": ["2026-03-26", "2026-03-25", "2026-03-27", "2026-03-28"],
-      "time": "10:30,17:00",
-      "message": "TCS Checkup at 28th"
     }
   ]
 }
