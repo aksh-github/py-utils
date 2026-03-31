@@ -69,7 +69,7 @@ def get_stock_performance(stockObj, period=def_time):
         return (f"No data found for {ticker}")
                 
     current_price = data['Close'].iloc[-1]  # today's price
-    # yest_price = data['Close'].iloc[-2]     # yest's price
+    yest_price = data['Close'].iloc[-2]     # yest's price
     one_month_perc_change = three_month_perc_change = six_month_perc_change = 0.0
 
     if period == '1y' and len(data) >= 126:
@@ -79,6 +79,10 @@ def get_stock_performance(stockObj, period=def_time):
         three_month_perc_change = ((current_price - three_month_price) / three_month_price) * 100
         one_month_price = data['Close'].iloc[-21]     # price before 1 month
         one_month_perc_change = ((current_price - one_month_price) / one_month_price) * 100
+
+    # Yesterday's change
+    today_change = current_price - yest_price
+    today_perc_change = ((current_price - yest_price) / yest_price) * 100
 
     lastXdayPrice =  data['Close'].iloc[0]     # price before 7 / 15 d etc.
 
@@ -104,6 +108,7 @@ def get_stock_performance(stockObj, period=def_time):
 
     return f"""**{ticker}: {buy_price} , Qty: {qty} {"⚠️" if perc_change < 0 or recent_perc_chng < 0 else ""}**:    
  **Current Price: {current_price:.2f}**
+ **Since Yesterday: {yest_price:.2f} to {current_price:.2f} {today_change:.2f} ({today_perc_change:.2f}%)**
  **Total Change: {change:.2f} ({perc_change:.2f}%)**
  1 Mon: {one_month_perc_change:.2f}% (Exp: {recent_perc_chng/12:.2f}%)
  3 Mon: {three_month_perc_change:.2f}% (Exp: {recent_perc_chng/4:.2f}%)
