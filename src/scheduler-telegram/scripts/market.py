@@ -64,7 +64,7 @@ def send_update():
     # print(message)
 
     try:
-        with TelegramClient(StringSession(), env['api_id'], env['api_hash']).start(bot_token=env['bot_token']) as client:
+        with TelegramClient(StringSession(), env['api_id'], env['api_hash'], timeout=5, request_retries=3, connection_retries=3 ).start(bot_token=env['bot_token']) as client:
 
             logging.info("Sending message...")
             # Message
