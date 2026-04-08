@@ -33,6 +33,17 @@
       ],
       "time": "11:00,15:00",
       "message": "Insurance Renewal Reminder (Expiry on 26th May)"
+    },
+{
+      "script": "monthly-reminders",
+      "day": [
+        "2026-05-01",
+        "2026-05-02",
+        "2026-05-03"
+   
+      ],
+      "time": "11:00,15:00",
+      "message": "Delete sys generated Tcs leave for compensate of 8th Apr forgot"
     }
   ]
 }
