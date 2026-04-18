@@ -2,12 +2,12 @@
   "daily": [
     {
       "script": "market",
-      "time": "10:05,16:30,18:20"
+      "time": "10:05,16:30"
     },
     {
       "script": "market",
-      "time": "10:05,12:05,14:05,18:20",
-      "message": "conditional"
+      "time": "10:05,12:05,14:05",
+      "message": "perf-check"
     },
     {
       "script": "timesheet",

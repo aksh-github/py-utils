@@ -8,6 +8,7 @@ from telethon.sessions import StringSession
 from datetime import datetime
 import pytz
 from stock_perfom import process
+import sys
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -45,7 +46,7 @@ def dummy_send_message():
 
 
 # this is actual func
-def send_update():
+def send_update(msg):
 
     # Load secrets from .env
     load_dotenv()
@@ -60,24 +61,27 @@ def send_update():
     # print(process())
 
     timeperiod = '1y'    
-    message = process(timeperiod)
+    message = process(timeperiod, msg)
     # print(message)
 
-    try:
-        with TelegramClient(StringSession(), env['api_id'], env['api_hash'], timeout=5, request_retries=3, connection_retries=3 ).start(bot_token=env['bot_token']) as client:
 
-            logging.info("Sending message...")
-            # Message
-            now = datetime.now()
-            # client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
-            client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + message, parse_mode="md")
+    # if not blank
+    if message:
+        try:
+            with TelegramClient(StringSession(), env['api_id'], env['api_hash'], timeout=5, request_retries=3, connection_retries=3 ).start(bot_token=env['bot_token']) as client:
 
-            logging.info("Message sent successfully!")
-    except Exception as e:
-        logging.error(f"Error: {e}")
+                logging.info("Sending message...")
+                # Message
+                now = datetime.now()
+                # client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
+                client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + message, parse_mode="md")
+
+                logging.info("Message sent successfully!")
+        except Exception as e:
+            logging.error(f"Error: {e}")
+    else:
+        logging.info("Stocks are performing good")
 
 
-message = sys.argv[1]
-main(message)
-
-send_update()
+message = sys.argv[1] if len(sys.argv) > 1 else ""
+send_update(message)

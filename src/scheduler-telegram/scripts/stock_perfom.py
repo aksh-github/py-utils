@@ -114,15 +114,47 @@ def get_stock_performance(stockObj, period=def_time):
  3 Mon: {three_month_perc_change:.2f}% (Exp: {recent_perc_chng/4:.2f}%)
  6 Mon: {six_month_perc_change:.2f}% (Exp: {recent_perc_chng/2:.2f}%)
  Since {period}: {lastXdayPrice:.2f} to {current_price:.2f} {recent_chng:.2f} ({recent_perc_chng:.2f}%)"""
+
+def check_stock_performance(stockObj, period=def_time):
+    ticker = stockObj["stock"]
+    buy_price = stockObj["buy_price"]
+    qty = stockObj["qty"]
+
+    stock = yf.Ticker(ticker)
+    data = stock.history(period=period)
+    
+    if data.empty:
+        logging.info(f"No data found for {ticker}")
+        return ""
+
+    current_price = data['Close'].iloc[-1]
+    loss = (buy_price - current_price) * qty
+
+    if loss <= 500:
+        return ""
+
+    logging.info(f"Got data for {ticker}")
+    return f"**{ticker}: {buy_price} , Qty: {qty}**: Loss ⚠️: {loss:.2f}"
     
 
-def process(period):
+def process(period, msg):
+
+    logging.info(f'got msg: {msg}')
+
     stocks = read_stocks()
+    result = ""
+    
+    # only when stocks are falling
+    if msg == "perf-check":
+        for stock in stocks:
+            res = check_stock_performance(stock, period=period)
+            if res:
+                res = res + "\n\r"
+            result = result + res
 
-    resp = ""
-    # for s in stocks:
-    #     resp = resp + get_stock_performance(s, period=period) + "\n\r" + "\n\r"
-    for stock in stocks:
-        resp = resp + get_stock_performance(stock, period=period) + "\n\r" + "\n\r"
+    # usual everyday update
+    else:
+        for stock in stocks:
+            result = result + get_stock_performance(stock, period=period) + "\n\r" + "\n\r"
 
-    return resp
+    return result
