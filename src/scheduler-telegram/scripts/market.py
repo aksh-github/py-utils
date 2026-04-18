@@ -76,4 +76,8 @@ def send_update():
     except Exception as e:
         logging.error(f"Error: {e}")
 
+
+message = sys.argv[1]
+main(message)
+
 send_update()
