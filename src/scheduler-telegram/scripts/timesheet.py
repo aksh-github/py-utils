@@ -1,12 +1,11 @@
-
+import asyncio
 import logging
 import datetime
 import os
 from pathlib import Path
 import sys
 from dotenv import load_dotenv
-from telethon.sync import TelegramClient
-from telethon.sessions import StringSession
+from telegram_utils import send_telegram_message
 
 # Get env variables
 def get_environment_variables():
@@ -19,6 +18,7 @@ def get_environment_variables():
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def main(message):
     # message = "Timesheet"
@@ -34,14 +34,17 @@ def main(message):
         exit(1)
 
     try:
-        with TelegramClient(StringSession(), env['api_id'], env['api_hash']).start(bot_token=env['bot_token']) as client:
-
-            logging.info("Sending message...")
-            
-            # client.send_message(int(env['id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
-            client.send_message(int(env['id']), message, parse_mode="md")
-
-            logging.info("Message sent successfully!")
+        logging.info("Sending message...")
+        asyncio.run(
+            send_telegram_message(
+                env['api_id'],
+                env['api_hash'],
+                env['bot_token'],
+                env['id'],
+                message,
+            )
+        )
+        logging.info("Message sent successfully!")
     except Exception as e:
         logging.error(f"Error: {e}")
 

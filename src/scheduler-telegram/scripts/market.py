@@ -1,14 +1,13 @@
+import asyncio
 import os
 import logging
 # import schedule
-import time
 from dotenv import load_dotenv
-from telethon.sync import TelegramClient
-from telethon.sessions import StringSession
 from datetime import datetime
 import pytz
 from stock_perfom import process
 import sys
+from telegram_utils import send_telegram_message
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -23,6 +22,7 @@ def get_environment_variables():
         'group_id': os.getenv('GROUP_ID')
     }
 
+
 # this is dummy func
 def dummy_send_message():
     # Load secrets from .env
@@ -34,15 +34,17 @@ def dummy_send_message():
         logging.error("Missing required environment variables")
         exit(1)
 
-    with TelegramClient(StringSession(), env['api_id'], env['api_hash']).start(bot_token=env['bot_token']) as client:
-
-        logging.info("Sending message...")
-        # Message
-        now = datetime.now()
-        client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y"))
-        client.send_message(int(env['group_id']), "**this text will be bold** is it bold?", parse_mode="md")
-
-        logging.info("Message sent successfully!")
+    now = datetime.now()
+    asyncio.run(
+        send_telegram_message(
+            env['api_id'],
+            env['api_hash'],
+            env['bot_token'],
+            env['group_id'],
+            now.strftime("%d-%m-%Y") + "\n\n**this text will be bold** is it bold?",
+        )
+    )
+    logging.info("Message sent successfully!")
 
 
 # this is actual func
@@ -68,15 +70,18 @@ def send_update(msg):
     # if not blank
     if message:
         try:
-            with TelegramClient(StringSession(), env['api_id'], env['api_hash'], timeout=5, request_retries=3, connection_retries=3 ).start(bot_token=env['bot_token']) as client:
-
-                logging.info("Sending message...")
-                # Message
-                now = datetime.now()
-                # client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod)
-                client.send_message(int(env['group_id']), now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + message, parse_mode="md")
-
-                logging.info("Message sent successfully!")
+            logging.info("Sending message...")
+            now = datetime.now()
+            asyncio.run(
+                send_telegram_message(
+                    env['api_id'],
+                    env['api_hash'],
+                    env['bot_token'],
+                    env['group_id'],
+                    now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + message,
+                )
+            )
+            logging.info("Message sent successfully!")
         except Exception as e:
             logging.error(f"Error: {e}")
     else:
