@@ -128,13 +128,19 @@ def check_stock_performance(stockObj, period=def_time):
         return ""
 
     current_price = data['Close'].iloc[-1]
-    loss = (buy_price - current_price) * qty
+    if buy_price <= 0:
+        logging.info(f"Invalid buy price for {ticker}")
+        return ""
 
-    if loss <= 500:
+    loss = (buy_price - current_price) * qty
+    loss_perc = ((buy_price - current_price) / buy_price) * 100
+
+    # Highlight only when loss is greater than 500 or greater than 5%
+    if loss <= 500 and loss_perc <= 5:
         return ""
 
     logging.info(f"Got data for {ticker}")
-    return f"**{ticker}: {buy_price} , Qty: {qty}**: Loss ⚠️: {loss:.2f}"
+    return f"**{ticker}: {buy_price} , Qty: {qty}**: Loss ⚠️: {loss:.2f} ({loss_perc:.2f}%)"
     
 
 def process(period, msg):

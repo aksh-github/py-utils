@@ -87,6 +87,9 @@ def send_update(msg):
     else:
         logging.info("Stocks are performing good")
 
-
-message = sys.argv[1] if len(sys.argv) > 1 else ""
-send_update(message)
+# Don't run on weekends
+if datetime.now().weekday() in (5, 6):
+    logging.info("It's Weekend!!")
+else:
+    message = sys.argv[1] if len(sys.argv) > 1 else ""
+    send_update(message)
