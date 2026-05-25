@@ -37,7 +37,20 @@
         "2027-05-26"
       ],
       "time": "11:00,15:00",
-      "message": "Insurance Renewal Reminder (Expiry on 27th May)"
+      "message": "Insur Renewal Reminder (Expiry on 27th May)"
+    },
+    {
+      "script": "monthly-reminders",
+      "day": [
+        "2026-06-10",
+        "2026-06-12",
+        "2026-06-14",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "time": "11:00,15:00",
+      "message": "PUC (Exp 18 Jn)"
     },
     {
       "script": "monthly-reminders",
