@@ -2,7 +2,7 @@
   "daily": [
     {
       "script": "market",
-      "time": "10:05,11:00,16:30"
+      "time": "10:05,11:30,16:30"
     },
     {
       "script": "market",
