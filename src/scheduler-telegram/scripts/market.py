@@ -8,6 +8,7 @@ import pytz
 from stock_perfom import process
 import sys
 from telegram_utils import send_telegram_message
+from arattai_utils import send_arattai_message
 
 # Logging setup
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -19,7 +20,8 @@ def get_environment_variables():
         'api_id': os.getenv('API_ID'),
         'api_hash': os.getenv('API_HASH'),
         'bot_token': os.getenv('BOT_TOKEN'),
-        'group_id': os.getenv('GROUP_ID')
+        'group_id': os.getenv('GROUP_ID'),
+        'zohoflow_url': os.getenv('ZOHOFLOW_URL'),
     }
 
 
@@ -30,7 +32,7 @@ def dummy_send_message():
 
     env = get_environment_variables()
 
-    if not all([env['api_id'], env['api_hash'], env['bot_token'], env['group_id']]):
+    if not all([env['api_id'], env['api_hash'], env['bot_token'], env['group_id'], env['zohoflow_url']]):
         logging.error("Missing required environment variables")
         exit(1)
 
@@ -55,7 +57,7 @@ def send_update(msg):
 
     env = get_environment_variables()
 
-    if not all([env['api_id'], env['api_hash'], env['bot_token'], env['group_id']]):
+    if not all([env['api_id'], env['api_hash'], env['bot_token'], env['group_id'], env['zohoflow_url']]):
         logging.error("Missing required environment variables")
         exit(1)
 
@@ -84,6 +86,9 @@ def send_update(msg):
             logging.info("Message sent successfully!")
         except Exception as e:
             logging.error(f"Error: {e}")
+            logging.info("Trying with Arattai...")
+
+            send_arattai_message(env['zohoflow_url'], message)
     else:
         logging.info("Stocks are performing good")
 
@@ -93,3 +98,4 @@ if datetime.now().weekday() in (5, 6):
 else:
     message = sys.argv[1] if len(sys.argv) > 1 else ""
     send_update(message)
+    # dummy_send_message()
