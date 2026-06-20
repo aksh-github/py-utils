@@ -2,6 +2,7 @@ import asyncio
 
 from telethon import TelegramClient
 from telethon.sessions import StringSession
+from telethon.network import ConnectionTcpIntermediate
 
 
 async def send_telegram_message(api_id, api_hash, bot_token, chat_id, text):
@@ -10,11 +11,12 @@ async def send_telegram_message(api_id, api_hash, bot_token, chat_id, text):
         StringSession(),
         int(api_id),
         api_hash,
-        timeout=30,
-        request_retries=1,
+        timeout=60,
+        request_retries=2,
         connection_retries=1,
-        retry_delay=1,
-        auto_reconnect=False,
+        retry_delay=5,
+        auto_reconnect=True,
+        connection=ConnectionTcpIntermediate, # Changes connection wrapper
     )
 
     try:
