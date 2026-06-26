@@ -34,7 +34,7 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 # docker rm py-scheduler
 
 # and then
-# docker run -d --name py-scheduler --restart=unless-stopped --env-file .env py-scheduler   # use -d to run in detached mode
+# docker run -p 5567:5567 -d --name py-scheduler --restart=unless-stopped --env-file .env py-scheduler   # use -d to run in detached mode
 
 # To check logs:
 # docker logs -f py-scheduler

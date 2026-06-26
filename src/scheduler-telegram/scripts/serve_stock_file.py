@@ -2,6 +2,7 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer
 from datetime import datetime, timezone, timedelta
 import os
 
+HOST="0.0.0.0"
 PORT = 5567
 FILENAME = "stock-update.txt"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -121,8 +122,8 @@ class FileChangeHandler(SimpleHTTPRequestHandler):
         self.wfile.write(error_message.encode('utf-8'))
 
 if __name__ == '__main__':
-    server = HTTPServer(('localhost', PORT), FileChangeHandler)
-    print(f"Server started at http://localhost:{PORT}")
+    server = HTTPServer((HOST, PORT), FileChangeHandler)
+    print(f"Server started at http://{HOST}:{PORT}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
