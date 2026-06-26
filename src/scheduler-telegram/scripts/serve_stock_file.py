@@ -84,7 +84,7 @@ class FileChangeHandler(SimpleHTTPRequestHandler):
                         <h1>Stock Performance</h1>
                         
                         <div class="meta-info">
-                            <span class="timestamp-title">Last Modified on Disk (IST):</span> 
+                            <span class="timestamp-title">Last Modified on (IST):</span> 
                             <span class="time-value">{readable_ist_time}</span>
                         </div>                        
                         <hr>
