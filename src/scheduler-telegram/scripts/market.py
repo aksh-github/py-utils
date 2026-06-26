@@ -25,6 +25,30 @@ def get_environment_variables():
     }
 
 
+def write_stock_update_file(content):
+    try:
+        if content is None:
+            raise ValueError("Content cannot be None")
+
+        output_path = os.path.join(os.path.dirname(__file__), 'stock-update.txt')   # need to be same as serve_stock_file.py
+        with open(output_path, 'w', encoding='utf-8') as file:
+            file.write(str(content))
+        logging.info("Stock update file written successfully: %s", output_path)
+        return True
+    except FileNotFoundError as exc:
+        logging.error("Directory not found while writing stock update file: %s", exc)
+        return False
+    except PermissionError as exc:
+        logging.error("Permission denied while writing stock update file: %s", exc)
+        return False
+    except ValueError as exc:
+        logging.error("Invalid content provided: %s", exc)
+        return False
+    except Exception as exc:
+        logging.error("Unexpected error while writing stock update file: %s", exc)
+        return False
+
+
 # this is dummy func
 def dummy_send_message():
     # Load secrets from .env
@@ -71,24 +95,54 @@ def send_update(msg):
 
     # if not blank
     if message:
-        try:
-            logging.info("Sending message...")
-            now = datetime.now()
-            asyncio.run(
-                send_telegram_message(
-                    env['api_id'],
-                    env['api_hash'],
-                    env['bot_token'],
-                    env['group_id'],
-                    now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + message,
-                )
-            )
-            logging.info("Message sent successfully!")
-        except Exception as e:
-            logging.error(f"Error: {e}")
-            logging.info("Trying with Arattai...")
 
-            send_arattai_message(env['zohoflow_url'], message)
+        # if its perfom check, send telegram message
+        if msg:    
+            try:
+                logging.info("Sending message...")
+                now = datetime.now()
+                asyncio.run(
+                    send_telegram_message(
+                        env['api_id'],
+                        env['api_hash'],
+                        env['bot_token'],
+                        env['group_id'],
+                        now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + message,
+                    )
+                )
+                logging.info("Message sent successfully!")
+            except Exception as e:
+                logging.error(f"Error: {e}")
+                logging.info("Trying with Arattai...")
+
+                send_arattai_message(env['zohoflow_url'], message)
+
+
+        else:
+        # write to text file, and just send link over telegram
+            try:
+                logging.info("Writing message to file...")
+
+                issuccess = write_stock_update_file(message)
+
+                if issuccess==False:
+                    logging.error(f"Something wrong while writing to file...")
+
+                now = datetime.now()
+                asyncio.run(
+                    send_telegram_message(
+                        env['api_id'],
+                        env['api_hash'],
+                        env['bot_token'],
+                        env['group_id'],
+                        now.strftime("%d-%m-%Y") + " " + timeperiod + "\n\n" + "Click this link to access latest report: [Stock report](http://bharatvidya.duckdns.org/stock-perfor)",
+                    )
+                )
+                logging.info("Message sent successfully!")
+                logging.info("File content written successfully!")
+            except Exception as e:
+                logging.error(f"Error: {e}")
+            
     else:
         logging.info("Stocks are performing good")
 

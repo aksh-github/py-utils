@@ -106,7 +106,7 @@ def get_stock_performance(stockObj, period=def_time):
     # ({lastXdayPrice:.2f} to {current_price:.2f}) {change:.2f} ({perc_change:.2f}%)
     # (Since yest: {yest_price:.2f} to {current_price:.2f}) {recent_chng:.2f} ({recent_perc_chng:.2f}%)"""
 
-    return f"""**{ticker}: {buy_price} , Qty: {qty} {"⚠️" if perc_change < 0 or recent_perc_chng < 0 else ""}**:    
+    return f"""**{ticker}: {buy_price} , Qty: {qty}{" ⚠️" if perc_change < 0 or recent_perc_chng < 0 else ""}**:    
  **Current Price: {current_price:.2f}**
  **Since Yesterday: {yest_price:.2f} to {current_price:.2f} {today_change:.2f} ({today_perc_change:.2f}%)**
  **Total Change: {change:.2f} ({perc_change:.2f}%)**
