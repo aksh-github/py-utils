@@ -5,11 +5,11 @@
 # moviepy
 
 # For telegram
-# yfinance
-# telethon
-# schedule
-# requests
-# python-dotenv
+yfinance
+telethon
+schedule
+requests
+python-dotenv
 
 
 # For OCR
