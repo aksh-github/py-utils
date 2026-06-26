@@ -65,7 +65,7 @@ class FileChangeHandler(SimpleHTTPRequestHandler):
                 <meta name="description" content="Sanskrit Dictionary App" />
                 <meta charset="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                    <title>OS Tracking Text File Viewer</title>
+                    <title>Stock Tracker</title>
                     <style>
                         body {{ font-family: sans-serif; margin: 0px; background: #eef2f3; }}
                         .container {{ background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }}
