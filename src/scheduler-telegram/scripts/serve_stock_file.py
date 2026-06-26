@@ -30,7 +30,7 @@ class FileChangeHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         global cached_mtime, cached_html_response
 
-        if self.path == '/':
+        if self.path == '/stock-perfor/':
             # 1. Fallback if the file does not exist
             if not os.path.exists(FILE_PATH):
                 self.send_error_response(f"Error: '{FILENAME}' not found at {FILE_PATH}.")
