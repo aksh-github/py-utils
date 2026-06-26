@@ -17,9 +17,12 @@ RUN pip install -r requirements.txt
 # Copy the source code of your application
 COPY src/scheduler-telegram /app/src
 
+# Copy the entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 # Set the command to run when the container starts
-# CMD ["python", "src/send-msg.py"]
-CMD ["python", "-u", "src/scheduler.py"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Use it like:
 # docker build -t py-scheduler .
