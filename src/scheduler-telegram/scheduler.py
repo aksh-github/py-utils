@@ -5,6 +5,8 @@ import requests
 import logging
 from datetime import datetime
 import subprocess
+import threading
+import sys
 
 
 # Setup logging
@@ -20,6 +22,37 @@ def is_script_exists(script_name):
     return os.path.isfile(script_path)
 
 
+def _stream_output(process):
+    try:
+        if process.stdout is None:
+            return
+        for line in process.stdout:
+            if not line:
+                continue
+            sys.stdout.write(line)
+            sys.stdout.flush()
+    except Exception as e:
+        logger.error(f"Error streaming child output: {e}")
+
+
+def _monitor_script(script_path, process, timeout_seconds=60):
+    try:
+        return_code = process.wait(timeout=timeout_seconds)
+        if return_code != 0:
+            logger.error(f"Script {script_path} exited with code {return_code}")
+    except subprocess.TimeoutExpired:
+        logger.error(f"Script {script_path} exceeded {timeout_seconds}s timeout; terminating it")
+        try:
+            process.terminate()
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            logger.error(f"Script {script_path} did not terminate gracefully; killing it")
+            process.kill()
+            process.wait(timeout=5)
+    except Exception as e:
+        logger.error(f"Error monitoring {script_path}: {e}")
+
+
 def run_script(script_name, message=None):
     try:
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,9 +60,31 @@ def run_script(script_name, message=None):
         cmd = ['python3', script_path]
         if message:
             cmd.append(message)
-        subprocess.run(cmd, check=True)
+
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            start_new_session=True,
+        )
+        stream_thread = threading.Thread(
+            target=_stream_output,
+            args=(process,),
+            daemon=True,
+        )
+        stream_thread.start()
+
+        monitor_thread = threading.Thread(
+            target=_monitor_script,
+            args=(script_path, process, 60),
+            daemon=True,
+        )
+        monitor_thread.start()
+        logger.info(f"Started script {script_name} in background (pid={process.pid})")
     except Exception as e:
-        logger.error(f"Error running {script_path}: {e}")
+        logger.error(f"Error starting {script_path}: {e}")
 
 # def market():
 #     """Execute market update"""
