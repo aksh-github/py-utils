@@ -55,6 +55,16 @@
     {
       "script": "monthly-reminders",
       "day": [
+        "2027-02-10",
+        "2027-02-17",
+        "2027-02-19"
+      ],
+      "time": "11:00,15:00",
+      "message": "HDF FD MAT 20/2"
+    },
+    {
+      "script": "monthly-reminders",
+      "day": [
         "2031-05-05",
         "2031-05-15",
         "2031-05-20",
