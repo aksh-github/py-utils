@@ -2,7 +2,7 @@
   "daily": [
     {
       "script": "market",
-      "time": "10:05,16:10"
+      "time": "10:05,16:10,10:45"
     },
     {
       "script": "market",
@@ -12,7 +12,7 @@
     {
       "script": "timesheet",
       "time": "10:30,14:25,21:00",
-      "message": "Timesheet"
+      "message": "Timesheet, EPFO Bank kyc"
     }
   ],
   "monthly": [
@@ -51,6 +51,16 @@
       ],
       "time": "11:00,15:00",
       "message": "PUC (Exp 17 Dec)"
+    },
+    {
+      "script": "monthly-reminders",
+      "day": [
+        "2027-02-10",
+        "2027-02-17",
+        "2027-02-19"
+      ],
+      "time": "11:00,15:00",
+      "message": "HDF FD MAT 20/2"
     },
     {
       "script": "monthly-reminders",
