@@ -78,7 +78,7 @@ def run_script(script_name, message=None):
 
         monitor_thread = threading.Thread(
             target=_monitor_script,
-            args=(script_path, process, 100),
+            args=(script_path, process, 120),
             daemon=True,
         )
         monitor_thread.start()
