@@ -6,7 +6,7 @@ from PyPDF2 import PdfReader , PdfWriter, PdfMerger
 
 pdfFiles = [] # variable 
 
-for root, dirs, filenames in os.walk(os.getcwd()+'\pdfs'): # Root and directory pathway.
+for root, dirs, filenames in os.walk(os.path.join(os.getcwd(), 'pdfs')): # Root and directory pathway.
     for filename in filenames: 
         if filename.lower().endswith('.pdf'):# for loop for all files with .pdf in the name.
             pdfFiles.append(os.path.join(root,filename)) 
@@ -31,7 +31,7 @@ for filename in pdfFiles: # Starting a for loop.
     
 
 # Name of the PDF file can be written here.
-pdfOutput = open('Desai-Feasi-Report-v2.pdf', 'wb') 
+pdfOutput = open('Final.pdf', 'wb') 
 
 # Writing the output file using the pdfWriter function.
 pdfWriter.write(pdfOutput)
